@@ -45,3 +45,15 @@
     top: 0;
     border: 6px solid var(--highlight);
 }
+
+.checked:after {
+    content: '';
+    display: block;
+    position: absolute;
+    width: var(--tile-size);
+    height: var(--tile-size);
+    background: var(--checked);
+    border-radius: 20px;
+    left: 0;
+    top: 0;
+}

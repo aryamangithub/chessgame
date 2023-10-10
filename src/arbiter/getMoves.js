@@ -1,3 +1,5 @@
+import arbiter from "./arbiter"
+
 export const getRookMoves = ({position, piece, rank, file}) => {
     const moves = []
     const us = piece[0]
@@ -117,3 +119,205 @@ export const getKingMoves = ({position, piece, rank, file}) => {
     })
     return moves
 }
+
+export const getPawnMoves = ({position, piece, rank, file}) => {
+   const moves = []
+   const dir = piece === 'white-pawn' ? 1 : -1
+// move 1 rank
+   if(!position?.[rank + dir][file]){
+    moves.push([rank + dir, file])
+   }
+//    move 2 ranks only first move
+   if(rank % 5 === 1){
+    if(position?.[rank + dir]?.[file] === '' && position?.[rank + dir + dir]?.[file] === ''){
+        moves.push([rank + dir + dir, file])
+       } 
+   }
+   return moves
+}
+
+export const getPawnCaptures = ({position, prevPosition, piece, rank, file}) => {
+    const moves = []
+    const dir = piece === 'white-pawn' ? 1 : -1
+    const enemy = piece[0] === 'white' ? 'black' : 'white'
+// capture enemy at left
+    if(position?.[rank + dir]?.[file - 1] && position?.[rank + dir]?.[file - 1].startsWith(enemy)) {
+        moves.push([rank + dir, file - 1])
+    }
+// capture enemy at right
+    if(position?.[rank + dir]?.[file + 1] && position?.[rank + dir]?.[file + 1].startsWith(enemy)) {
+        moves.push([rank + dir, file + 1])
+    }
+
+    // En passant 
+    const enemyPawn = dir === 1 ? 'black-pawn' : 'white-pawn'
+    const adjacentFiles = [file-1, file+1]
+    if(prevPosition) {
+        if( (dir === 1 && rank ===  4) || (dir === -1 && rank === 3)) {
+            adjacentFiles.forEach(f => {
+                if( position?.[rank]?.[f] === enemyPawn &&
+                    position?.[rank + dir + dir]?.[f] === '' &&
+                    prevPosition?.[rank]?.[f] === '' &&
+                    prevPosition?.[rank + dir + dir]?.[f] === enemyPawn ) {
+                        moves.push([rank + dir, f])
+                    }
+            })
+        }
+    }
+
+
+
+    return moves
+ }
+
+ export const getCastlingMoves = ({position, castleDirection, piece, rank, file}) => {
+    const moves = []
+
+    if(file !== 4 || rank % 7 !== 0 || castleDirection === 'none') {
+        return moves
+    }
+    if(piece.startsWith('white')) {
+        if(arbiter.isplayerInCheck({positionAfterMove : position, player : 'white'}))
+            return moves
+        if(['left', 'both'].includes(castleDirection) &&
+            !position[0][3] &&
+            !position[0][2] &&
+            !position[0][1] &&
+            position[0][0] === 'white-rook' &&
+            !arbiter.isplayerInCheck({
+                positionAfterMove : arbiter.performMove({position, piece, rank, file, x:0, y:3}),
+                player : 'white'
+            }) &&
+            !arbiter.isplayerInCheck({
+                positionAfterMove : arbiter.performMove({position, piece, rank, file, x:0, y:2}),
+                player : 'white'
+            })
+            ){
+                moves.push([0,2])
+            }
+        if(['right', 'both'].includes(castleDirection) &&
+            !position[0][5] &&
+            !position[0][6] &&
+            position[0][7] === 'white-rook' &&
+            !arbiter.isplayerInCheck({
+                positionAfterMove : arbiter.performMove({position, piece, rank, file, x:0, y:5}),
+                player : 'white'
+            }) &&
+            !arbiter.isplayerInCheck({
+                positionAfterMove : arbiter.performMove({position, piece, rank, file, x:0, y:6}),
+                player : 'white'
+            })
+            ){
+                moves.push([0,6])
+            }
+    }
+    else {
+        if(arbiter.isplayerInCheck({positionAfterMove : position, player : 'black'}))
+            return moves
+        if(['left', 'both'].includes(castleDirection) &&
+            !position[7][3] &&
+            !position[7][2] &&
+            !position[7][1] &&
+            position[7][0] === 'black-rook' &&
+            !arbiter.isplayerInCheck({
+                positionAfterMove : arbiter.performMove({position, piece, rank, file, x:7, y:3}),
+                player : 'black'
+            }) &&
+            !arbiter.isplayerInCheck({
+                positionAfterMove : arbiter.performMove({position, piece, rank, file, x:7, y:2}),
+                player : 'black'
+            })
+            ){
+                moves.push([7,2])
+            }
+        if(['right', 'both'].includes(castleDirection) &&
+            !position[7][5] &&
+            !position[7][6] &&
+            position[7][7] === 'black-rook' &&
+            !arbiter.isplayerInCheck({
+                positionAfterMove : arbiter.performMove({position, piece, rank, file, x:7, y:5}),
+                player : 'black'
+            }) &&
+            !arbiter.isplayerInCheck({
+                positionAfterMove : arbiter.performMove({position, piece, rank, file, x:7, y:6}),
+                player : 'black'
+            })
+            ){
+                moves.push([7,6])
+            }
+    }
+
+    return moves
+ }
+
+ export const getCastleDirections = ({castleDirection,piece,rank,file}) => {
+    rank = Number(rank)
+    file = Number(file)
+    const direction = castleDirection[piece[0]];
+    if(piece.endsWith('king'))
+        return 'none'
+
+    if(file === 0 && rank === 0) {
+        if(direction === 'both')
+            return 'right'
+        if(direction === 'left')
+            return 'none'
+    }
+
+    if(file === 7 && rank === 0) {
+        if(direction === 'both')
+            return 'left'
+        if(direction === 'right')
+            return 'none'
+    }
+
+    if(file === 0 && rank === 7) {
+        if(direction === 'both')
+            return 'right'
+        if(direction === 'left')
+            return 'none'
+    }
+
+    if(file === 7 && rank === 7) {
+        if(direction === 'both')
+            return 'left'
+        if(direction === 'right')
+            return 'none'
+    }
+ }
+
+ export const getKingPosition = ({position, player}) => {
+    if(!position || !Array.isArray(position)) {
+        return undefined
+    }
+    let kingPos
+    position.forEach((rank,x) => {
+        rank.forEach((file, y) => {
+            if(position[x][y].startsWith(player) && position[x][y].endsWith('king'))
+                kingPos = [x,y]
+        })
+    })
+    return kingPos
+    
+ }
+ export const getPieces = ({position, enemy}) => {
+
+    if(!position || !Array.isArray(position)){
+        return
+    }
+    const enemyPieces = []
+        position.forEach((rank,x) => {
+            rank.forEach((file, y) => {
+                if(position[x][y].startsWith(enemy)) {
+                    enemyPieces.push({
+                        piece : position[x][y],
+                        rank : x,
+                        file : y
+                    })
+                }
+            })
+        })
+        return enemyPieces
+ }
+
+ 

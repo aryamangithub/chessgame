@@ -4,6 +4,7 @@
     --light-tile : #E9EDCC;
     --bg-color : #202020;
     --highlight : rgba(0,0,0,.1);
+    --checked : #facf4d;
 }
 
 @media all and (max-width : 450px) {

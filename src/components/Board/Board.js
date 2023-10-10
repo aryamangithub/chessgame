@@ -1,9 +1,13 @@
-// import { getCharacter } from '../../helper'
 import './Board.css'
 import Ranks from './bits/Ranks'
 import Files from './bits/Files'
 import Pieces from '../Pieces/Pieces'
+import arbiter from '../../arbiter/arbiter'
 import { useAppContext } from '../../contexts/Context'
+import { getKingPosition } from '../../arbiter/getMoves'
+import Promotion from '../Popup/Promotion/Promotion'
+import GameEnds from '../Popup/GameEnds/GameEnds' 
+import Popup from '../Popup/Popup'
 
 const Board = () => {
     const ranks = Array(8).fill().map((x, i) => 8-i)
@@ -11,6 +15,19 @@ const Board = () => {
 
     const {appState} = useAppContext()
     const position = appState.position[appState.position.length - 1]
+
+    const isChecked = (() => {
+        const isInCheck = arbiter.isplayerInCheck({
+            positionAfterMove : position,
+            player : appState.turn
+        })
+
+        if(isInCheck){
+            return getKingPosition(position, appState.turn)
+        }
+
+        return null
+    })()
 
     const getClassName = (i,j) => {
         let c = 'tile'
@@ -37,6 +54,10 @@ const Board = () => {
         </div>
         
         <Pieces/>
+        <Popup>
+            <Promotion></Promotion>
+            <GameEnds></GameEnds>
+        </Popup>
 
         < Files files={files}/>
     </div>

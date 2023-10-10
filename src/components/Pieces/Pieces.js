@@ -4,6 +4,11 @@ import { useRef } from 'react'
 import { useAppContext } from '../../contexts/Context'
 import { copyPosition } from '../../helper'
 import { clearCandidates, makeNewMove } from '../../reducer/actions/move'
+import arbiter from '../../arbiter/arbiter'
+import { openPromotion } from '../../reducer/actions/popup'
+import { detectStalemate, detectInsufficientMaterial, detectCheckmate, updateCastling } from '../../reducer/actions/game'
+import { getNewMoveNotation } from '../../helper'
+import { getCastleDirections } from '../../arbiter/getMoves'
 
 const Pieces = () => {
 
@@ -20,19 +25,68 @@ const Pieces = () => {
         return {x,y}
     }
 
-    const onDrop = e => {
-        const newPosition = copyPosition(currentPosition)
+    const updateCastlingState = ({piece,rank,file}) => {
+        const direction = getCastleDirections({
+            castleDirection : appState.castleDirection,
+            piece,rank,file
+        })
+
+        if(direction) {
+            dispatch(updateCastlingState(direction))
+        }
+    }
+
+    const openPromotionBox = ({rank, file, x, y}) => {
+        dispatch(openPromotion({
+            rank : Number(rank),
+            file : Number(file),
+            x,
+            y
+        }))
+    }
+
+    const move = e => {
         const {x,y} = calculateCoords(e)
 
-        const [p,rank,file] = e.dataTransfer.getData("text").split(',')
-
+        const [piece,rank,file] = e.dataTransfer.getData("text").split(',')
         if(appState.candidateMoves?.find(m => m[0] === x && m[1] === y)){
-            newPosition[Number(rank)][Number(file)] = ''
-            newPosition[x][y] = p
-            dispatch(makeNewMove({newPosition}))
-        }
 
+            const opponent = piece.startsWith('black') ? 'white' : 'black'
+            const CastleDirection = appState.CastleDirection[`${piece.startsWith('black') ? 'white' : 'black'}`]
+            if((piece === 'white-pawn' && x === 7) || (piece === 'black-pawn' && x === 0)) {
+                openPromotionBox({rank,file,x,y})
+                return
+            }
+            if(piece.endsWith('rook') || piece.endsWith('king')) {
+                updateCastlingState({piece,rank,file})
+            }
+            const newPosition = arbiter.performMove({
+                position : currentPosition,
+                piece, rank, file,
+                x,y
+            })
+
+            const newMove = getNewMoveNotation({
+                piece, rank, file,x,y,position : currentPosition
+            })
+            
+            dispatch(makeNewMove({newPosition, newMove}))
+
+            if(arbiter.insufficientMaterial(newPosition))
+                dispatch(detectInsufficientMaterial())
+            
+            else if(arbiter.isCheckmate(newPosition, opponent, CastleDirection))
+                dispatch(detectCheckmate(piece[0]))
+
+            else if(arbiter.isStalemate(newPosition, opponent, CastleDirection))
+                dispatch(detectStalemate())
+        }
         dispatch(clearCandidates())
+    }
+
+    const onDrop = e => {
+        e.preventDefault()
+        move(e)
     }
 
     const onDragOver = e => {e.preventDefault()}

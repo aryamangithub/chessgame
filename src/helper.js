@@ -4,10 +4,10 @@ export const createPosition = () => {
 
     const position = new Array(8).fill('').map(x=> new Array(8).fill(''))
 
-    // for(let i = 0; i < 8; i++){
-    //     position[1][i] = 'white-pawn'
-    //     position[6][i] = 'black-pawn'
-    // }
+    for(let i = 0; i < 8; i++){
+        position[1][i] = 'white-pawn'
+        position[6][i] = 'black-pawn'
+    }
 
     position[0][0] = 'white-rook'
     position[0][1] = 'white-knight'
@@ -40,3 +40,47 @@ export const copyPosition = position => {
     }
     return newPosition
 }
+
+export const areSameColorTiles = (coords1, coords2) => {
+    return (coords1.x + coords1.y) % 2 === (coords2.x + coords2.y) % 2
+}
+export const findPieceCoords = (position, type) => {
+    let results = []
+    position.forEach((rank,i) => {
+        rank.forEach((pos,j) => {
+            if(pos === type)
+                results.push({x:i, y:j})
+        })
+    })
+    return results
+}
+
+export const getNewMoveNotation = ({piece, rank, file, x, y, position, promotesTo}) => {
+    let note = ''
+
+    rank = Number(rank)
+    file = Number(file)
+
+    if(piece[1] === 'king' && Math.abs(file - y) === 2) {
+        if(file > y)
+            return 'O-O'
+        else return 'O-O-O'
+    }
+
+    if(piece[1] !== 'pawn') {
+        note += piece[1].toUpperCase()
+        if(position[x][y]) {
+            note += 'x'
+        }
+    }
+    else if (rank !== x &&  file !== y) {
+        note += getCharacter(file + 1)+'x'
+    }
+
+    note += getCharacter(y+1) + (x+1)
+
+    if(promotesTo)
+        note += '=' + promotesTo.toUpperCase()
+
+    return note
+ }

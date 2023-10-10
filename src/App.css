@@ -11,5 +11,15 @@
   place-content: center;
   height: 100vh;
   background : var(--bg-color);
-  font-family: 'Montserrat', sans-serif;;
+  font-family: 'Montserrat', sans-serif;
+  grid-template-columns: auto 220px;
+}
+
+button {
+  background: var(--dark-tile);
+  color: var(--light-tile);
+  border: 0 none;
+  padding: 10px 30px;
+  margin: 10px 0;
+  font-size: 1.1em;
 }
