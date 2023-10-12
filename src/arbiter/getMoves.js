@@ -288,7 +288,7 @@ export const getPawnCaptures = ({position, prevPosition, piece, rank, file}) => 
 
  export const getKingPosition = ({position, player}) => {
     if(!position || !Array.isArray(position)) {
-        return undefined
+        return position
     }
     let kingPos
     position.forEach((rank,x) => {
@@ -303,7 +303,7 @@ export const getPawnCaptures = ({position, prevPosition, piece, rank, file}) => 
  export const getPieces = ({position, enemy}) => {
 
     if(!position || !Array.isArray(position)){
-        return
+        return position
     }
     const enemyPieces = []
         position.forEach((rank,x) => {

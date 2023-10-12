@@ -19,8 +19,8 @@ export const clearCandidates = () => {
     }
 }
 
-export const takeBack = () => {
-    return {
-        type : actionTypes.TAKE_BACK
-    }
-}
+// export const takeBack = () => {
+//     return {
+//         type : actionTypes.TAKE_BACK
+//     }
+// }

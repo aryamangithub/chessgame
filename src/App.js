@@ -22,7 +22,6 @@ function App() {
           <Board/>
           <Control>
               <MovesList></MovesList>
-              <TakeBack></TakeBack>
           </Control>
         </div>
     </AppContext.Provider>

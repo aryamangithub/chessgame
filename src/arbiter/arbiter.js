@@ -60,7 +60,7 @@ const arbiter = {
 
     isplayerInCheck : function ({positionAfterMove, position, player}) {
         if(!position || Array.isArray(position)){
-            return
+            return position
         }
         const enemy = player.startsWith('white') ? 'black' : 'white'
         let kingPos = getKingPosition(positionAfterMove, player)
