@@ -5,7 +5,7 @@ const MovesList = () => {
     const {appState} = useAppContext() 
 
     if(!appState || !appState.MovesList || !Array.isArray(appState.MovesList)){
-        return null
+        return MovesList
     }
     return <div className="moves-list">
         {MovesList.map((move, i) => 

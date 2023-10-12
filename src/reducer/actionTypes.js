@@ -9,7 +9,6 @@ const actionTypes = {
     "STALEMATE" : "STALEMATE",
     "INSUFFICIENT_MATERIAL" : "INSUFFICIENT_MATERIAL",
     "WIN" : "WIN",
-    "TAKE_BACK" : "TAKE_BACK"
 }
 
 export default actionTypes

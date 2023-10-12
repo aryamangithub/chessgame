@@ -5,7 +5,6 @@ import { reducer } from './reducer/Reducer';
 import { useReducer } from 'react';
 import { initialGameState } from './constant';
 import MovesList from './components/Control/bits/MovesList';
-import TakeBack from './components/Control/bits/TakeBack';
 import Control from './components/Control/Control';
 
 function App() {
