@@ -8,13 +8,13 @@ export const updateCastling = direction => {
     }
 }
 
-export const detectStalemate = (direction) => {
+export const detectStalemate = () => {
     return {
         type : actionTypes.STALEMATE,
     }
 }
 
-export const detectInsufficientMaterial = (direction) => {
+export const detectInsufficientMaterial = () => {
     return {
         type : actionTypes.INSUFFICIENT_MATERIAL,
     }
@@ -22,7 +22,7 @@ export const detectInsufficientMaterial = (direction) => {
 
 export const detectCheckmate = winner => {
     return {
-        type : actionTypes.CHECKMATE,
+        type : actionTypes.WIN,
         payload : winner
     }
 }

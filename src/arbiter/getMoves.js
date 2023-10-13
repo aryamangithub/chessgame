@@ -13,7 +13,7 @@ export const getRookMoves = ({position, piece, rank, file}) => {
     ]
 
     direction.forEach(dir => {
-        for(let i = 1; i < 8; i++){
+        for(let i = 1; i <= 8; i++){
 
             const x = rank + (i*dir[0])
             const y = file + (i*dir[1])
@@ -67,7 +67,7 @@ export const getBishopMoves = ({position, piece, rank, file}) => {
     ]
 
     direction.forEach(dir => {
-        for(let i = 1; i < 8; i++){
+        for(let i = 1; i <= 8; i++){
 
             const x = rank + (i*dir[0])
             const y = file + (i*dir[1])
@@ -122,9 +122,9 @@ export const getKingMoves = ({position, piece, rank, file}) => {
 
 export const getPawnMoves = ({position, piece, rank, file}) => {
    const moves = []
-   const dir = piece === 'white-pawn' ? 1 : -1
+   const dir = piece === 'wp' ? 1 : -1
 // move 1 rank
-   if(!position?.[rank + dir][file]){
+   if(!position?.[rank + dir]?.[file]){
     moves.push([rank + dir, file])
    }
 //    move 2 ranks only first move
@@ -138,19 +138,19 @@ export const getPawnMoves = ({position, piece, rank, file}) => {
 
 export const getPawnCaptures = ({position, prevPosition, piece, rank, file}) => {
     const moves = []
-    const dir = piece === 'white-pawn' ? 1 : -1
+    const dir = piece === 'p' ? 1 : -1
     const enemy = piece[0] === 'white' ? 'black' : 'white'
 // capture enemy at left
-    if(position?.[rank + dir]?.[file - 1] && position?.[rank + dir]?.[file - 1].startsWith(enemy)) {
+    if(position?.[rank + dir]?.[file - 1] && position[rank + dir][file - 1].startsWith(enemy)) {
         moves.push([rank + dir, file - 1])
     }
 // capture enemy at right
-    if(position?.[rank + dir]?.[file + 1] && position?.[rank + dir]?.[file + 1].startsWith(enemy)) {
+    if(position?.[rank + dir]?.[file + 1] && position[rank + dir][file + 1].startsWith(enemy)) {
         moves.push([rank + dir, file + 1])
     }
 
     // En passant 
-    const enemyPawn = dir === 1 ? 'black-pawn' : 'white-pawn'
+    const enemyPawn = dir === 1 ? 'bp' : 'wp'
     const adjacentFiles = [file-1, file+1]
     if(prevPosition) {
         if( (dir === 1 && rank ===  4) || (dir === -1 && rank === 3)) {
@@ -183,7 +183,7 @@ export const getPawnCaptures = ({position, prevPosition, piece, rank, file}) => 
             !position[0][3] &&
             !position[0][2] &&
             !position[0][1] &&
-            position[0][0] === 'white-rook' &&
+            position[0][0] === 'wr' &&
             !arbiter.isplayerInCheck({
                 positionAfterMove : arbiter.performMove({position, piece, rank, file, x:0, y:3}),
                 player : 'white'
@@ -198,7 +198,7 @@ export const getPawnCaptures = ({position, prevPosition, piece, rank, file}) => 
         if(['right', 'both'].includes(castleDirection) &&
             !position[0][5] &&
             !position[0][6] &&
-            position[0][7] === 'white-rook' &&
+            position[0][7] === 'wr' &&
             !arbiter.isplayerInCheck({
                 positionAfterMove : arbiter.performMove({position, piece, rank, file, x:0, y:5}),
                 player : 'white'
@@ -218,13 +218,15 @@ export const getPawnCaptures = ({position, prevPosition, piece, rank, file}) => 
             !position[7][3] &&
             !position[7][2] &&
             !position[7][1] &&
-            position[7][0] === 'black-rook' &&
+            position[7][0] === 'br' &&
             !arbiter.isplayerInCheck({
                 positionAfterMove : arbiter.performMove({position, piece, rank, file, x:7, y:3}),
+                position : position,
                 player : 'black'
             }) &&
             !arbiter.isplayerInCheck({
                 positionAfterMove : arbiter.performMove({position, piece, rank, file, x:7, y:2}),
+                position : position,
                 player : 'black'
             })
             ){
@@ -233,13 +235,15 @@ export const getPawnCaptures = ({position, prevPosition, piece, rank, file}) => 
         if(['right', 'both'].includes(castleDirection) &&
             !position[7][5] &&
             !position[7][6] &&
-            position[7][7] === 'black-rook' &&
+            position[7][7] === 'br' &&
             !arbiter.isplayerInCheck({
                 positionAfterMove : arbiter.performMove({position, piece, rank, file, x:7, y:5}),
+                position : position,
                 player : 'black'
             }) &&
             !arbiter.isplayerInCheck({
                 positionAfterMove : arbiter.performMove({position, piece, rank, file, x:7, y:6}),
+                position : position,
                 player : 'black'
             })
             ){
@@ -254,7 +258,7 @@ export const getPawnCaptures = ({position, prevPosition, piece, rank, file}) => 
     rank = Number(rank)
     file = Number(file)
     const direction = castleDirection[piece[0]];
-    if(piece.endsWith('king'))
+    if(piece.endsWith('k'))
         return 'none'
 
     if(file === 0 && rank === 0) {
@@ -286,25 +290,18 @@ export const getPawnCaptures = ({position, prevPosition, piece, rank, file}) => 
     }
  }
 
- export const getKingPosition = ({position, player}) => {
-    if(!position || !Array.isArray(position)) {
-        return position
-    }
+ export const getKingPosition = (position, player) => {
     let kingPos
     position.forEach((rank,x) => {
         rank.forEach((file, y) => {
-            if(position[x][y].startsWith(player) && position[x][y].endsWith('king'))
+            if(position[x][y].startsWith(player) && position[x][y].endsWith('k'))
                 kingPos = [x,y]
         })
     })
     return kingPos
     
  }
- export const getPieces = ({position, enemy}) => {
-
-    if(!position || !Array.isArray(position)){
-        return position
-    }
+ export const getPieces = (position, enemy) => {
     const enemyPieces = []
         position.forEach((rank,x) => {
             rank.forEach((file, y) => {

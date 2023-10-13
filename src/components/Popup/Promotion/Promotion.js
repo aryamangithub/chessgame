@@ -4,7 +4,7 @@ import { clearCandidates, makeNewMove } from '../../../reducer/actions/move'
 import './Promotion.css'
 
 const Promotion = ({onClosePopup}) => {
-    const options = ['queen', 'rook', 'bishop', 'knight']
+    const options = ['q', 'r', 'b', 'n']
 
     const {appState, dispatch} = useAppContext()
     const {promotionSquare} = appState
@@ -15,7 +15,7 @@ const Promotion = ({onClosePopup}) => {
     const color = promotionSquare.x === 7 ? 'white' : 'black'
 
     const getPromotionBoxPosition = () => {
-        const style = {}
+        let style = {}
         if(promotionSquare.x === 7) 
             style.top = '-12.5%'
         else 

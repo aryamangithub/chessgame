@@ -16,11 +16,11 @@ const Board = () => {
     const {appState} = useAppContext()
     const position = appState.position[appState.position.length - 1]
 
-    const isChecked = (() => {
-        const isInCheck = arbiter.isplayerInCheck({
+    const checkTile = (() => {
+        const isInCheck = (arbiter.isplayerInCheck({
             positionAfterMove : position,
             player : appState.turn
-        })
+        }))
 
         if(isInCheck){
             return getKingPosition(position, appState.turn)
@@ -38,6 +38,10 @@ const Board = () => {
                 c+= ' attacking'
             else c+= ' highlight'
         }
+
+        if(checkTile && checkTile[0] === i && checkTile[1] === j){
+            c+= ' checked'
+        }
         return c
     }
 
@@ -48,7 +52,7 @@ const Board = () => {
         <div className='tiles'>
            {ranks.map((rank,i) => 
                 files.map((file, j) =>
-                    <div key={rank+''+file } className={getClassName(7-i,j)}></div>
+                    <div key={rank+''+file } i={i} j={j} className={getClassName(7-i,j)}></div>
                 )    
             )}
         </div>

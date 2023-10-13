@@ -1,6 +1,6 @@
 import './Control.css'
 const Control = ({children}) => {
-    return <div className="control">
+    return <div className='control'>
         {children}
     </div>
 }

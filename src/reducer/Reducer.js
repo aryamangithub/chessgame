@@ -20,16 +20,17 @@ export const reducer = (state, action) => {
 
             return {
                 ...state,//state will remain same 
-                movesList,
                 position,
+                movesList,
                 turn
             }
         }
 
         case actionTypes.GENERATE_CANDIDATE_MOVES : {
+            const {candidateMoves} = action.payload
             return {
                 ...state,
-                candidateMoves : action.payload.candidateMoves
+                candidateMoves
             }
         }
 
@@ -97,22 +98,6 @@ export const reducer = (state, action) => {
             }
         }
 
-        case actionTypes.TAKE_BACK : {
-            let {position, movesList, turn} = state
-
-            if(position.length > 1) {
-                position = position.slice(0, position.length-1)
-                movesList = movesList.slice(0, movesList.length-1)
-                turn = turn === 'white' ? 'black' : 'white'
-            }
-
-            return {
-                ...state,
-                position,
-                movesList,
-                turn
-            }
-        }
         default : return state
     }
 

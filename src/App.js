@@ -18,10 +18,10 @@ function App() {
   return (
     <AppContext.Provider value = {providerState}>
         <div className='App'>
-          <Board/>
-          <Control>
-              <MovesList></MovesList>
-          </Control>
+            <Board/>
+            <Control>
+                <MovesList></MovesList>
+            </Control>
         </div>
     </AppContext.Provider>
   );

@@ -9,7 +9,7 @@ const Popup = ({children}) => {
     const {appState : {status}, dispatch} = useAppContext()
     
     const onClosePopup = () => {
-        dispatchEvent(closePopup())
+        dispatch(closePopup())
     }
 
     if(status === Status.ongoing)

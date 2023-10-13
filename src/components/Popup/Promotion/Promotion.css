@@ -16,11 +16,11 @@
     left :0;
 }
 .promotion-choices :is(.white-rook, .black-rook) {
-    left :0;
+    left :25%;
 }
 .promotion-choices :is(.white-bishop, .black-bishop) {
-    left :0;
+    left :50%;
 }
 .promotion-choices :is(.white-knight, .black-knight) {
-    left :0;
+    left :75%;
 }
