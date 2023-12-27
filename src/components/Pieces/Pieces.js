@@ -2,13 +2,12 @@ import './Pieces.css'
 import Piece from './Piece'
 import { useRef } from 'react'
 import { useAppContext } from '../../contexts/Context'
-import { copyPosition } from '../../helper'
 import { clearCandidates, makeNewMove } from '../../reducer/actions/move'
 import arbiter from '../../arbiter/arbiter'
 import { openPromotion } from '../../reducer/actions/popup'
 import { detectStalemate, detectInsufficientMaterial, detectCheckmate, updateCastling } from '../../reducer/actions/game'
 import { getNewMoveNotation } from '../../helper'
-import { getCastleDirections } from '../../arbiter/getMoves'
+import { getCastlingDirections } from '../../arbiter/getMoves'
 
 const Pieces = () => {
 
@@ -26,7 +25,7 @@ const Pieces = () => {
     }
 
     const updateCastlingState = ({piece,rank,file}) => {
-        const direction = getCastleDirections({
+        const direction = getCastlingDirections({
             castleDirection : appState.castleDirection,
             piece,file,rank
         })
@@ -75,7 +74,7 @@ const Pieces = () => {
             if(arbiter.insufficientMaterial(newPosition))
                 dispatch(detectInsufficientMaterial())
             
-            else if(arbiter.isCheckmate(newPosition, opponent, castleDirection))
+            else if(arbiter.isCheckMate(newPosition, opponent, castleDirection))
                 dispatch(detectCheckmate(piece[0]))
 
             else if(arbiter.isStalemate(newPosition, opponent, castleDirection))

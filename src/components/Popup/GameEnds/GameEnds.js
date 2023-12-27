@@ -3,7 +3,7 @@ import { useAppContext } from '../../../contexts/Context'
 import { setupNewGame } from '../../../reducer/actions/game'
 import './GameEnds.css'
 
-const GameEnds = () => {
+const GameEnds = ({onclosePopup}) => {
 
     const { appState : {status}, dispatch } = useAppContext()
 

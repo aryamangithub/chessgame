@@ -4,15 +4,15 @@ import { clearCandidates, makeNewMove } from '../../../reducer/actions/move'
 import './Promotion.css'
 
 const Promotion = ({onClosePopup}) => {
-    const options = ['q', 'r', 'b', 'n']
-
+    
     const {appState, dispatch} = useAppContext()
     const {promotionSquare} = appState
-
+    
     if(!promotionSquare)
         return null
 
     const color = promotionSquare.x === 7 ? 'white' : 'black'
+    const options = ['q', 'r', 'b', 'n']
 
     const getPromotionBoxPosition = () => {
         let style = {}
