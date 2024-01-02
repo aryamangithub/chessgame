@@ -1,15 +1,14 @@
 .moves-list {
     display: flex;
     flex-direction: row;
-    color: var(--dark-tile);
-    flex : 1 1;
+    color: var(--dark-tile  );
+    flex: 1 1;
     flex-wrap: wrap;
     align-content: start;
     overflow: auto;
     font-size: 1.1em;
 }
-
-.moves-list div{
+.moves-list div {
     flex-basis: 35%;
     padding-left: 15%;
     text-align: left;

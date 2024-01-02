@@ -4,7 +4,7 @@ import { useAppContext }from '../../contexts/Context'
 import Ranks from './bits/Ranks'
 import Files from './bits/Files'
 import Pieces from '../Pieces/Pieces'
-import PromotionBox from '../Popup/Promotion/Promotion'
+import PromotionBox from '../Popup/PromotionBox/PromotionBox'
 import Popup from '../Popup/Popup'
 import GameEnds from '../Popup/GameEnds/GameEnds'
 
@@ -32,7 +32,7 @@ const Board = () => {
 
     const getClassName = (i,j) => {
         let c = 'tile'
-        c+= (i+j)%2 === 0 ? ' dark-tile ' : ' light-tile'
+        c+= (i+j)%2 === 0 ? ' tile--dark ' : ' tile--light '
         if (appState.candidateMoves?.find(m => m[0] === i && m[1] === j)){
             if (position[i][j])
                 c+= ' attacking'

@@ -1,13 +1,13 @@
 :root {
     --tile-size : 80px;
-    --dark-tile : #779954;
     --light-tile : #E9EDCC;
+    --dark-tile : #779954;
     --bg-color : #202020;
     --highlight : rgba(0,0,0,.1);
-    --checked : #facf4d;
+    --check : #facf4d;
 }
 
-@media all and (max-width : 450px) {
+@media all and (max-width: 450px) {
     :root {
         --tile-size : 50px;
     }
